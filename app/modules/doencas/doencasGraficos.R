@@ -59,7 +59,7 @@ gerador_graficos_cidade = function(banco, local){
     labs(x = "Genótipos", y = "Valor Médio", title = paste("Cidade", local), color = "Grupos", 
          fill = "Fusarium oxysporum") +
     coord_flip() + 
-    scale_fill_brewer(palette = "Dark2")+
+    scale_fill_brewer(palette = "Dark2") +
     theme(legend.position = "top", 
           legend.title = element_text(colour="blue", size=10,  face="bold"),
           axis.text =   element_text(face="bold")) 
@@ -70,7 +70,7 @@ gerador_graficos_cidade = function(banco, local){
     geom_col() +
     theme_bw() + 
     labs(x = "Genótipos", y = "Valor Médio", title = paste("Cidade", local), color = "Grupos", fill= "Fusarium solani") +
-    coord_flip() + scale_fill_brewer(palette = "Dark2")+
+    coord_flip() + scale_fill_brewer(palette = "Dark2") +
     theme(legend.position = "top", 
           legend.title = element_text(colour="red", size=10,  face="bold"),
           axis.text =  element_text(face="bold" ))

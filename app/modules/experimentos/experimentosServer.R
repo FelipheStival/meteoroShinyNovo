@@ -6,11 +6,6 @@ experimentoServer = function(input, output, session) {
                change_page('/')
   )
   
-  # Botao gerenciar
-  observeEvent(input$btnAtualizarDadosExperimentos,
-               change_page('/gerenciarExperimentos')
-  )
-  
   # dados doenca input service
   dadosEnsaios = reactive({
     dados = experimentos.provider.dados()

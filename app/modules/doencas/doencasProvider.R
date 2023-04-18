@@ -53,8 +53,8 @@ getDadosDoencasProvider = function(){
   fs_mudanca <- mudanca %>% group_by(previsao_fs) %>% summarize(maximo = max(notas))
   fo_mudanca <- mudanca %>% group_by(previsao_fo) %>% summarize(maximo = max(notas))
   
-  ordem_fo <- c("1", "2", "3")
-  ordem_fs <- c("3", "1", "2")
+  ordem_fo <- c("3", "1", "2")
+  ordem_fs <- c("1", "2", "3")
   ordem <- c("Baixo", "Médio", "Alto")
   
   wdata <- wdata %>% mutate(previsao_fs = factor(predict(fs_modelo, FS), levels = ordem_fs, label = ordem) , 

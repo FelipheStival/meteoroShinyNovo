@@ -338,18 +338,7 @@ doencas.sidebar = function() {
 
 # Pagina doencas
 experimentosUI = div(id = "clima-container",
-                     
-                     #====== fab button  =====
-                     fab_button(
-                       actionButton(
-                         inputId = "btnAtualizarDadosExperimentos",
-                         label = "Atualizar dados",
-                         icon = icon("upload")
-                       ),
-                       inputId = "fab"
-                     ),
-                     #====== fim do botao  =====     
-                     
+                    
                      dashboardPage(
                        #========================header=========================
                        

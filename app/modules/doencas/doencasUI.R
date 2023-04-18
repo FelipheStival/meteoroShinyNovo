@@ -2,17 +2,6 @@
 doencasUI = div(
   id = "clima-container",
   
-  #====== fab button  =====
-  fab_button(
-    actionButton(
-      inputId = "btnAtualizarDadosDoencas",
-      label = "Atualizar dados",
-      icon = icon("upload")
-    ),
-    inputId = "fab"
-  ),
-  #====== fim do botao  =====
-  
   dashboardPage(
     #========================header=========================
     dashboardHeader(title =  "Doenças",

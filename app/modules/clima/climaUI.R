@@ -332,18 +332,6 @@ create.side.bar = function() {
 
 # Pagina clima
 climaUI = div(id = "clima-container",
-              
-              #====== fab button  =====
-              fab_button(
-                actionButton(
-                  inputId = "btnAtualizarDados",
-                  label = "Atualizar dados",
-                  icon = icon("upload")
-                ),
-                inputId = "fab"
-              ),
-              #====== fim do botao  =====
-              
               dashboardPage(
                 #========================header=========================
                 

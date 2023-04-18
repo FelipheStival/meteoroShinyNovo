@@ -6,12 +6,6 @@ doencaServer = function(input, output, session) {
                change_page('/')
   )
   
-  # Botao gerenciar
-  observeEvent(input$btnAtualizarDadosDoencas,
-               change_page('/gerenciarDoencas')
-  )
-  
-  
   # Reactive para conseguir os dados dos municipios
   dadosDoencas = reactive({
     dados = getDadosDoencasProvider()
