@@ -111,6 +111,13 @@ experimentos.provider.dadosFiltrados = function(dados, input) {
   } 
   
   # Filtrando irrigacao e fungicida
+  if(!is.null(input$fungicidaInputDoencas)){
+    filtrado = filtrado[filtrado$fungicida == input$fungicidaInputDoencas, ]
+  }
+  
+  if(!is.null(input$irrigacao)){
+    filtrado = filtrado[filtrado$irrigacao == input$irrigacao, ]
+  }
   
   return(filtrado)
 }

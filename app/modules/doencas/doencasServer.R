@@ -1,6 +1,9 @@
 # Doenca service
 doencaServer = function(input, output, session) {
   
+  # Javascript para alterar o title
+  runjs(sprintf('$("title").html("%s");', APP_NAME))
+  
   # Botao Voltar
   observeEvent(input$btnRetonarDoencas,
                change_page('/')
@@ -8,8 +11,10 @@ doencaServer = function(input, output, session) {
   
   # Reactive para conseguir os dados dos municipios
   dadosDoencas = reactive({
+    
     dados = getDadosDoencasProvider()
     return(dados)
+    
   })
   
   # Atualizando safras
@@ -25,10 +30,12 @@ doencaServer = function(input, output, session) {
       choices = safras,
       selected = safras[1]
     ) 
+    
   })
   
   # Atualizando locais
   observe({
+    
     if(!is.null(input$safraInputDoencas2)){
       
       dados = dadosDoencas()
@@ -44,18 +51,23 @@ doencaServer = function(input, output, session) {
         ) 
       }
     }
+    
   })
   
   # output grafico media geral
   output$graficoDoencasPlot1 = renderPlot({
+    
     localSelect = input$select_doencas_local
     gerador_graficos_cidade(dadosDoencas(), localSelect)
+    
   })
   
   # output grafico local
   output$graficoDoencasPlot2 = renderPlot({
+    
     safraSelect = input$safraInputDoencas2;
     gerador_graficos(dadosDoencas(), safraSelect)
+    
   })
   
 }

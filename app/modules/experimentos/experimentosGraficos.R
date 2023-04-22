@@ -117,7 +117,8 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
   grafico = tabela %>%
     ggplot(aes(x = site, y = gid, fill = predicts)) +
     geom_tile(height = 1.1, color = 'black') +
-    scale_fill_gradientn(colors = c("red","green")) +
+    scale_fill_gradientn(colors = c("red","green")) + 
+    theme_minimal() +
     labs(
       x = 'Locais',
       y = 'Genótipos',
@@ -166,7 +167,8 @@ grafico.GraficoLinhas = function(dados) {
           text = element_text(size = 15)) +
     xlab("Local") +
     ylab("Produtividade (kg/ha)") +
-    labs(colour = "Genotipo")
+    labs(colour = "Genotipo") +
+    theme_minimal()
   
   
   return(p)
@@ -265,7 +267,8 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
     scale_fill_discrete(labels = fill_label) +
     labs(
       title = paste('Média geral', round(mediaPredict), sep = ":")
-    )
+    ) +
+    theme_minimal()
 }
 
 #==============================================#

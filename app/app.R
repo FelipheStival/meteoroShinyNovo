@@ -6,6 +6,7 @@ app.LoadPackages = function()
     # Iniciando bibliotecas web
     require(shiny) 
     require(shinydashboard)
+    require(shinyjs)
     require(shinymanager)
     require(shiny.router)
     require(leaflet)
@@ -52,7 +53,7 @@ app.LoadPackages = function()
 # Carregando arquivos compilados
 app.LoadModules = function() {
   
-    # Carregando modulos secundarios
+    # Carregando modulos
     modulos = list.files(path = 'modules',
                          pattern = ".R$",
                          recursive = T,
@@ -60,17 +61,23 @@ app.LoadModules = function() {
                          )
     log = sapply(modulos,source,encoding="utf-8")
     
-    # Carregando modulos principal
-    modulos = list.files(path = 'cor',
-                         pattern = ".R$",
-                         recursive = T,
-                         full.names = T
-    )
-    log = sapply(modulos,source,encoding="utf-8")
+}
+#==============================================#
+
+#==============================================#
+# Carregando funções globais
+app.globalFunctions = function(){
+  
+  customSpinner <<- function(outputFun){
+    f = withSpinner(outputFun, image = 'logos//loader.png', image.width = '100px', image.height = '70px')
+    return(f)
+  }
+  
 }
 #==============================================#
 
 app.LoadPackages()
+app.globalFunctions()
 app.LoadModules()
 
 shinyApp(ui, server)

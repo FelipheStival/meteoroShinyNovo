@@ -9,13 +9,8 @@ server = shinyServer(function(input, output, session) {
   # Router
   router$server(input, output, session)
   
-  # Botao retornar
-  observeEvent(input$btnRetonar,
-               change_page('/')
-               )
-  
-  # Conexao com banco de dados
-  
+  # Javascript para alterar o title
+  runjs(sprintf('$("title").html("%s");', APP_NAME))
   
   # Doencas Server
   doencaServer(input, output, session)
@@ -29,11 +24,6 @@ server = shinyServer(function(input, output, session) {
   # Gerenciar Server
   gerenciarServer(input, output, session)
   
-  # Gerenciar Experimentos 
-  #gerenciarExperimentosServer(input, output, session)
-  
-  # Gerenciar doencas
-  #gerenciarDoencasServer(input, output, session)
   
   
 })

@@ -1,14 +1,15 @@
 # Mapa service
 mapaServer = function(input, output, session) {
   
+  # Javascript para alterar o title
+  runjs(sprintf('$("title").html("%s");', APP_NAME))
+  
   # Botao retornar
-  observeEvent(input$btnRetonarExperimentos,
-               change_page('/')
-  )
+  observeEvent(input$btnRetonarClima,change_page('/'))
   
   # Obter estados
   observe({
-    estados = provider.obterEstados()
+    estados = climaObterEstados()
     updateSelectInput(
       session = session,
       inputId = "estadoInput",
@@ -20,7 +21,7 @@ mapaServer = function(input, output, session) {
   # Obter cidades
   observe({
     if(!is.null(input$estadoInput)){
-      cidades = provider.obterCidades(input$estadoInput)
+      cidades = climaObterCidades(input$estadoInput)
       updateSelectInput(
         session = session,
         inputId = "cidadeInput",
@@ -33,31 +34,25 @@ mapaServer = function(input, output, session) {
   
   # Reactive para conseguir os dados dos municipios
   cidades = reactive({
-    dados = provider.obterCidades(input$estadoInput)
+    dados = climaObterCidades(input$estadoInput)
     return(dados)
   })
   
   # Reative para conseguir os dados climaticos
   dadosClimaticos = reactive({
-    dados = provider.obterClimaticos(input$cidadeInput,
-                                     input$periodoInput
-                                    )
+    dados = climaObterClimaticos(input$cidadeInput, input$periodoInput)
   })
   
   # Reative para conseguir os dados anomalia
   dadosAnomaliaTemperatura = reactive({
-    dados = grafico.provider.dadosPrec(dadosClimaticos(),input$safraGrupoInput)
+    dados = climaObterdadosPrec(dadosClimaticos(), input$safraGrupoInput)
     return(dados)
   })
   
   # Saida tabela
   output$tabelaDados = renderDataTable({
-    provider.renomear.colunas(dadosClimaticos())
-  },options = list(
-    lengthMenu = c(5, 10, 15, 20),
-    pageLength = 15,
-    scrollX = TRUE
-  ))
+    ClimaRenomearColunas(dadosClimaticos())
+  },options = list(lengthMenu = c(5, 10, 15, 20),pageLength = 15,scrollX = TRUE))
   
   # Download dados
   output$downloadDados = downloadHandler(
@@ -86,7 +81,7 @@ mapaServer = function(input, output, session) {
                     max(dadosClimaticos()$data))
       
       # Gerando anos
-      anos = graficos.provider.rangeDate(rangeDate[1], rangeDate[2])
+      anos = graficoGerarRangeDatas(rangeDate[1], rangeDate[2])
       
       # Atualizando input
       updateSelectInput(session = session,
@@ -97,9 +92,7 @@ mapaServer = function(input, output, session) {
   
   # Saida grafica mapa
   output$mapaEstacoes = renderLeaflet({
-    mapaChart(
-      mapa.provider.dadosMapa()
-    )
+    mapaChart(climaObterDadosMapa())
   })
   
   # Evento click mapa
@@ -116,76 +109,91 @@ mapaServer = function(input, output, session) {
   
   # Saida grafica boxplot
   output$graficosPerdidosPlot = renderPlot({
+    
     grafico.boxplot(
       tabela = dadosClimaticos(),
       nomeEstacao = input$cidadeInput,
       Grupodias = input$grupodiasBoxPlot,
       colunaVariavel = input$boxplotVariavel,
-      color = graficos.provider.grafico.cor(input$boxplotVariavel),
-      ylab = graficos.provider.grafico.legenda(input$boxplotVariavel)
+      color = climaObterCorGrafico(input$boxplotVariavel),
+      ylab = climaObterLegendaGrafico(input$boxplotVariavel)
     ) 
+    
   })
   
   # Saida grafica grafio matriz
   output$Matrizplot = renderPlot({
+    
     graficos.GraficoMatriz(
       dados = dadosClimaticos(),
       Municipio = input$cidadeInput,
       Coluna = input$variavelSelect,
-      cor = graficos.provider.grafico.cor(input$variavelSelect),
+      cor = climaObterCorGrafico(input$variavelSelect),
       intervalo = input$grupoDiasSelect
     )
+    
   })
   
   # Saida grafica precipitacao
   output$plotPrecipitacao = renderPlot({
+    
       grafico.precipitacao(
         dados = dadosClimaticos(),
         Municipio = input$cidadeInput,
         Grupodias = input$grupoDiasSelectPrec,
         Coluna = "precip"
       ) 
+    
   })
   
   # Saida grafica precipitacao cumulativa
   output$PrecipitacaoCumulativaPlot = renderPlot({
+    
     grafico.precipitacaoAcumulada(
       tabela = dadosClimaticos(),
       Municipio = input$cidadeInput,
       Coluna = "precip"
     ) 
+    
   })
   
   # Saida grafica seco e umido
   output$secoUmidoPlot = renderPlot({
+    
       grafico.diaSecoUmido(
         tabela = dadosClimaticos(),
         colunaPrecipitacao = "precip",
         Municipio = input$cidadeInput,
         intervalo = input$secoUmidoGrupoDias
       ) 
+    
   })
   
   # Saida grafico periodo chuvoso
   output$periodoChuvosoPlot = renderPlot({
+    
       graficos.periodoClimatico(
         dados = dadosClimaticos(),
         Municipio = input$cidadeInput,
         Coluna = "precip"
       ) 
+    
   })
   
   # Saida grafica anomalia temperatura
   output$AnomaliaTemperaturaPlot = renderPlot({
+    
       grafico.anomalia.temperatura(
         data_inv = dadosAnomaliaTemperatura(),
         municipio = input$cidadeInput,
         meses = input$safraGrupoInput,
-        nomesMeses = provider.meses.analises.nomes(input$safraGrupoInput))
+        nomesMeses = climaObterMesesAnalisesNomes(input$safraGrupoInput))
+    
   })
   
   # Saida grafica anomalia precipitacao
   output$anomaliaPrecipitacaoPlot = renderPlot({
+    
       grafico.GraficoAnomalia(
         cidade = input$cidadeInput,
         ano = input$anoSelectAnomalia,
@@ -193,6 +201,7 @@ mapaServer = function(input, output, session) {
         dadosClimaticos(),
         ylab = "precipitacao",
         Escala = 100)
+    
   })
   
 }

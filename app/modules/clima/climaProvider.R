@@ -1,42 +1,48 @@
-# Metodo para obter os estados
-provider.obterEstados = function() {
+#======================================================================
+# Método para obter os estados da tabela estados
+#======================================================================
+climaObterEstados = function() {
   statement = "SELECT * FROM public.estados"
   estados = banco.provider.executeQuery(statement)
   return(estados)
 }
 
-# Metodo para obter as cidades de acordo com o estado
-provider.obterCidades = function(estado) {
-  statement = sprintf(
-    "
-  SELECT cidades.id,
-  cidades.nome,
-	cidades.id_estado
+#======================================================================
+# Método para obter as cidades de acordo com o estado
+#======================================================================
+climaObterCidades = function(estado) {
+  statement = sprintf( "
+  SELECT 
+    cidades.id,
+    cidades.nome,
+  	cidades.id_estado
 	FROM public.cidades
 	JOIN estados ON cidades.id_estado = estados.id
-	WHERE estados.nome = '%s'",
-    estado
-  )
+	WHERE estados.nome = '%s'", estado)
+  
   cidades = banco.provider.executeQuery(statement)
   return(cidades)
+  
 }
 
-# Metodo para conseguir os dados climaticos
-provider.obterClimaticos = function(cidade, periodo) {
+#=======================================================================
+# Método para obter os dados climáticos de acordo com a cidade e periodo
+#=======================================================================
+climaObterClimaticos = function(cidade, periodo) {
   statement = sprintf(
     "SELECT
-  clima.data,
-	clima.Tmax,
-	clima.Tmin,
-	clima.Tmed,
-	clima.Urmed,
-	clima.Vento,
-	clima.Vtmax,
-	clima.Rad,
-	clima.Precip,
-	clima.Tsolo,
-	estados.nome as nome_estado,
-	cidades.nome as cidade_nome
+        clima.data,
+      	clima.Tmax,
+      	clima.Tmin,
+      	clima.Tmed,
+      	clima.Urmed,
+      	clima.Vento,
+      	clima.Vtmax,
+      	clima.Rad,
+      	clima.Precip,
+      	clima.Tsolo,
+      	estados.nome as nome_estado,
+	      cidades.nome as cidade_nome
 	FROM public.clima
 	JOIN cidades ON clima.id_cidade = cidades.id
 	JOIN estados ON cidades.id_estado = estados.id
@@ -44,17 +50,16 @@ provider.obterClimaticos = function(cidade, periodo) {
 	AND
 	clima.data >= '%s'
 	AND
-	clima.data <= '%s'",
-    cidade,
-    periodo[1],
-    periodo[2]
-  )
+	clima.data <= '%s'",cidade,periodo[1], periodo[2])
+  
   dados = banco.provider.executeQuery(statement)
   return(dados)
 }
 
-# Metodo para obter a cor do grafico
-graficos.provider.grafico.cor = function(variavelSelect) {
+#=======================================================================
+# Método para obter a cor do gráfico de acordo com a várivel 
+#=======================================================================
+climaObterCorGrafico = function(variavelSelect) {
   cor = NULL
   switch (
     variavelSelect,
@@ -89,8 +94,10 @@ graficos.provider.grafico.cor = function(variavelSelect) {
   return(cor)
 }
 
-# Metodo para obter a legenda do grafico
-graficos.provider.grafico.legenda = function(variavelSelect) {
+#=======================================================================
+# Método para obter a lengenda do gráfico de acordo com a várivel 
+#=======================================================================
+climaObterLegendaGrafico = function(variavelSelect) {
   legenda = NULL
   switch (
     variavelSelect,
@@ -119,7 +126,10 @@ graficos.provider.grafico.legenda = function(variavelSelect) {
   return(legenda)
 }
 
-grafico.provider.dadosPrec = function(dados, meses) {
+#=======================================================================
+# Método para obter a lengenda do gráfico de acordo com a várivel 
+#=======================================================================
+climaObterdadosPrec = function(dados, meses) {
   
   # Calculando meses
   dados$data = ymd(dados$data)
@@ -162,7 +172,7 @@ grafico.provider.dadosPrec = function(dados, meses) {
   if(meses == "Safra"){
     
     #Gerando safra
-    data = grafico.provider.safra(data)
+    data = climaCriarsafras(data)
     
     #removendo safras NA
     data = data[!is.na(data$safra), ]
@@ -233,9 +243,9 @@ grafico.provider.dadosPrec = function(dados, meses) {
 #======================================================================
 meteo_yr =  function(dates, start_month = NULL) {
   # convert to POSIXlt
-  dates.posix <- as.POSIXlt(dates)
+  dates.posix = as.POSIXlt(dates)
   # year offset
-  offset <- ifelse(dates.posix$mon >= start_month - 1, 1, 0)
+  offset = ifelse(dates.posix$mon >= start_month - 1, 1, 0)
   # new year
   adj.year = dates.posix$year + 1900 + offset
   return(adj.year)
@@ -244,7 +254,7 @@ meteo_yr =  function(dates, start_month = NULL) {
 #======================================================================
 # Metodo para criar as safras para o grafico anomalia temperatura
 #======================================================================
-grafico.provider.safra = function(data) {
+climaCriarsafras = function(data) {
   #criando coluna safra
   data$safra = NA
   
@@ -275,7 +285,7 @@ grafico.provider.safra = function(data) {
 #======================================================================
 # Metodo para gerar o range de anos
 #======================================================================
-graficos.provider.rangeDate = function(minData, maxData) {
+graficoGerarRangeDatas = function(minData, maxData) {
   pastePeriodo = NULL
   minData = format(as.Date(minData), "%Y")
   maxData = format(as.Date(maxData), "%Y")
@@ -292,12 +302,13 @@ graficos.provider.rangeDate = function(minData, maxData) {
 #==================================================================
 # Metodo para obter dados para desenhar o mapa
 #==================================================================
-mapa.provider.dadosMapa = function() {
-  statement = "SELECT cidades.id,
-  cidades.nome as municipio,
-	cidades.latitude as latitude,
-	cidades.longitude as longitude,
-	cidades.id_estado
+climaObterDadosMapa = function() {
+  statement = "SELECT 
+    cidades.id,
+    cidades.nome as municipio,
+  	cidades.latitude as latitude,
+  	cidades.longitude as longitude,
+  	cidades.id_estado
 	FROM public.cidades
 	JOIN estados ON cidades.id_estado = estados.id"
   dados = banco.provider.executeQuery(statement)
@@ -306,7 +317,7 @@ mapa.provider.dadosMapa = function() {
 #==================================================================
 # Metodo para renomear as colunas
 #==================================================================
-provider.renomear.colunas = function(dados){
+ClimaRenomearColunas = function(dados){
   names(dados) = c(
     "Data",
     "Temperatura máxima (ºC)",
@@ -326,7 +337,7 @@ provider.renomear.colunas = function(dados){
 #==================================================================
 # Metodo para obter os meses do input anomalia
 #==================================================================
-provider.meses.analises = function(inputAnomalia){
+climaObterMesesAnalises = function(inputAnomalia){
   meses = NULL
   switch (
     inputAnomalia,
@@ -352,7 +363,7 @@ provider.meses.analises = function(inputAnomalia){
 #==================================================================
 # Metodo para obter as legendas das analises
 #==================================================================
-provider.meses.analises.nomes = function(inputAnomalia){
+climaObterMesesAnalisesNomes = function(inputAnomalia){
   legenda = NULL
   switch (
     inputAnomalia,
@@ -375,4 +386,23 @@ provider.meses.analises.nomes = function(inputAnomalia){
   return(legenda)
 }
 
-
+#==================================================================
+# Metodo para obter as escolhas para o gráfico basico e matriz
+#==================================================================
+climaProviderEscolhasGenericas = function(){
+  
+  choices = c(
+    "Temperatura mínima do ar(ºC)" = "tmin",
+    "Temperatura máxima do ar(ºC)" = "tmax",
+    "Temperatura média (ºC)" = "tmed",
+    "Umidade relativa do ar média (%)" = "urmed",
+    "Velocidade média do vento (m/s)" = "vento",
+    "Velocidade máxima do vento (m/s)" = "vtmax",
+    "Radiação solar global (MJ/m2.dia)" = "rad",
+    "precipitação (mm)" = "precip",
+    "temperatura do solo (ºC)" = "tsolo"
+  )
+  
+  return(choices)
+  
+}

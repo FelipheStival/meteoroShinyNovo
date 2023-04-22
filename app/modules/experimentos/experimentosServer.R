@@ -1,8 +1,11 @@
 # Doenca service
 experimentoServer = function(input, output, session) {
   
+  # Javascript para alterar o title
+  runjs(sprintf('$("title").html("%s");', APP_NAME))
+  
   # Botao retornar
-  observeEvent(input$btnRetonarClima,
+  observeEvent(input$btnRetonarExperimentos,
                change_page('/')
   )
   
@@ -296,6 +299,7 @@ experimentoServer = function(input, output, session) {
     )
     #====================================#
     grafico.analiseGGE_QuemVenceEAonde(gge)
+    
   })
   #==============================================#
   

@@ -1,6 +1,7 @@
 # Configuração
-APP_NAME = "INMET"
+APP_NAME = "Fundação ABC"
 APP_LANGUAGE = "pt"
+LOGIN = FALSE
 
 #DB_HOST = "192.168.144.13"
 DB_HOST = "localhost"
