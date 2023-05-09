@@ -78,7 +78,7 @@ grafico.analiseEstatistica_Resumo = function(tabela, mediaSelect = 'TODOS') {
   # Muda o df para formato long
   long <- melt(modified_data,id.vars="gid")
   
-  ggplot(data = long, aes(x=reorder(gid,value), y=value, fill=variable)) + 
+  g = ggplot(data = long, aes(x=reorder(gid,value), y=value, fill=variable)) + 
     geom_bar(stat = "identity",
              position="dodge") +
     xlab("Genótipos") +
@@ -91,6 +91,7 @@ grafico.analiseEstatistica_Resumo = function(tabela, mediaSelect = 'TODOS') {
     labs(
       title = paste('Média geral', round(mediaPredict), sep = ":")
     )
+  ggplotly(g)
 }
 #==============================================#
 
@@ -99,7 +100,7 @@ grafico.analiseEstatistica_Resumo = function(tabela, mediaSelect = 'TODOS') {
 # Grafico "Unitario"
 grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TODOS') {
   data_plot = data_plot[data_plot$site == site,]
-  ggplot(data = data_plot, aes(x=reorder(gid,predicts), y=predicts)) + 
+  g = ggplot(data = data_plot, aes(x=reorder(gid,predicts), y=predicts)) + 
     geom_boxplot( fill = "lightyellow") + 
     stat_boxplot(geom ='errorbar') + 
     xlab("Genótipos") +
@@ -107,6 +108,8 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
     coord_flip() + 
     theme_light() +
     facet_grid(~site)
+  
+  ggplotly(g)
 }
 #==============================================#
 
@@ -130,7 +133,7 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
       legend.title.align = 0.5
     )
   
-  return(grafico)
+  ggplotly(grafico)
 }
 #==============================================#
 
@@ -171,7 +174,7 @@ grafico.GraficoLinhas = function(dados) {
     theme_minimal()
   
   
-  return(p)
+  ggplotly(p)
 }
 
 #==============================================#
@@ -256,7 +259,7 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
   }
   
   # Enfim o grafico do cluster
-  ggplot(cluster_data_pin, aes(x=grupos, y=reorder(gid,grupos), fill = as.factor(grupos))) +
+  g = ggplot(cluster_data_pin, aes(x=grupos, y=reorder(gid,grupos), fill = as.factor(grupos))) +
     geom_bar(stat='identity') +
     theme(axis.text.x = element_blank(),
           axis.ticks.x = element_blank()) +
@@ -269,6 +272,8 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
       title = paste('Média geral', round(mediaPredict), sep = ":")
     ) +
     theme_minimal()
+  
+  ggplotly(g)
 }
 
 #==============================================#

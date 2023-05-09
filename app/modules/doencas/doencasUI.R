@@ -66,8 +66,8 @@ doencasUI = div(
                 width = 9,
                 tabBox(
                   width = '100%',
-                  tabPanel('Grafico Geral',plotOutput('graficoDoencasPlot2', width = '100%', height = '80vh') %>% customSpinner()),
-                  tabPanel('Grafico local',plotOutput('graficoDoencasPlot1', width = '100%', height = '80vh') %>% customSpinner())
+                  tabPanel('Grafico Geral',plotlyOutput('graficoDoencasPlot2', width = '100%', height = '80vh') %>% customSpinner()),
+                  tabPanel('Grafico local',plotlyOutput('graficoDoencasPlot1', width = '100%', height = '80vh') %>% customSpinner())
                 )     
               )
       

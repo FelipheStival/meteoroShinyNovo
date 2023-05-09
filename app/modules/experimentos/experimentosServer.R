@@ -192,7 +192,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Resumo"
-  output$grafico_analiseEstatistica_Resumo = renderPlot({
+  output$grafico_analiseEstatistica_Resumo = renderPlotly({
     
     #====================================#
     # Validacao
@@ -210,7 +210,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Unitario"
-  output$grafico_analiseEstatistica_Unitario = renderPlot({
+  output$grafico_analiseEstatistica_Unitario = renderPlotly({
     #====================================#
     # Validacao
     
@@ -229,7 +229,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Heatmap"
-  output$grafico_analiseEstatistica_Heatmap = renderPlot({
+  output$grafico_analiseEstatistica_Heatmap = renderPlotly({
     
     #====================================#
     # Validacao
@@ -249,7 +249,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Analise cluster"
-  output$grafico_geral_cluster = renderPlot({
+  output$grafico_geral_cluster = renderPlotly({
     
     #====================================#
     # Validacao
@@ -268,7 +268,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "linhas"
-  output$graficolinha = renderPlot({
+  output$graficolinha = renderPlotly({
     
     #====================================#
     # Validacao

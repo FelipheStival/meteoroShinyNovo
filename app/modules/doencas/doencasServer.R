@@ -55,7 +55,7 @@ doencaServer = function(input, output, session) {
   })
   
   # output grafico media geral
-  output$graficoDoencasPlot1 = renderPlot({
+  output$graficoDoencasPlot1 = renderPlotly({
     
     localSelect = input$select_doencas_local
     gerador_graficos_cidade(dadosDoencas(), localSelect)
@@ -63,7 +63,7 @@ doencaServer = function(input, output, session) {
   })
   
   # output grafico local
-  output$graficoDoencasPlot2 = renderPlot({
+  output$graficoDoencasPlot2 = renderPlotly({
     
     safraSelect = input$safraInputDoencas2;
     gerador_graficos(dadosDoencas(), safraSelect)

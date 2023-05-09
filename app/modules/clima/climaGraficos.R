@@ -70,7 +70,6 @@ graficos.GraficoMatriz = function(dados, Municipio, Coluna, cor, intervalo)
     main = titulo,
     ylab = "Precipitacao pluvial (mm)"
   )
-  
 }
 
 grafico.precipitacao = function(dados, Municipio, Grupodias, Coluna)
@@ -140,6 +139,7 @@ grafico.precipitacaoAcumulada = function(tabela, Municipio, Coluna)
        type = "l",
        main = titulo,
        ylab = "Precipitação cumulativa (mm)")
+  
   
 }
 
@@ -272,7 +272,7 @@ grafico.anomalia.temperatura = function(data_inv, municipio, meses, nomesMeses) 
     ) +
     theme_bw()
   
-  return(g1)
+  ggplotly(g1)
 }
 
 #======================================================================
@@ -396,7 +396,7 @@ grafico.GraficoAnomalia = function(cidade,
     )
   g1 = g1 + labs(x = "", title = as.character(sprintf("Anomalia precipitacao em %s", cidade))) + theme(text = element_text(size = 16))
   
-  plot(g1)
+  ggplotly(g1)
 }
 
 #==================================================================
@@ -499,7 +499,7 @@ graficos.periodoClimatico = function(dados, Municipio, Coluna) {
   titulo = sprintf("Periodos climaticos da estacao %s", Municipio)
   col = c("#ff9999", "gray", "#56B4E9")
   
-  ggplot(resumo, aes(factor(mes), R_diff)) + geom_boxplot(aes(fill = periodo)) +
+  g = ggplot(resumo, aes(factor(mes), R_diff)) + geom_boxplot(aes(fill = periodo)) +
     scale_fill_manual(breaks = breaks,
                       labels = labels,
                       values = col) +
@@ -520,4 +520,6 @@ graficos.periodoClimatico = function(dados, Municipio, Coluna) {
         'Dezembro'
       )
     )
+  
+  ggplotly(g)
 }

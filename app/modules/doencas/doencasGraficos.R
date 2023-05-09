@@ -33,7 +33,7 @@ gerador_graficos = function(banco, filtroSafra){
           legend.title = element_text(colour="red", size=10,  face="bold"),
           axis.text =  element_text(face="bold" ))
   
-  grafico = plot_grid(grafico2, grafico1)
+  grafico = subplot(grafico2, grafico1)
   
   return(grafico)
 }
@@ -75,7 +75,7 @@ gerador_graficos_cidade = function(banco, local){
           legend.title = element_text(colour="red", size=10,  face="bold"),
           axis.text =  element_text(face="bold" ))
   
-  grafico = plot_grid(grafico2, grafico1)
-  
+  grafico = subplot(grafico2, grafico1)
+ 
   return(grafico)
 }

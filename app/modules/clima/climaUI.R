@@ -154,7 +154,7 @@ climaUI = div(
                 ),
                 box(
                   width = 9,
-                  plotOutput("AnomaliaTemperaturaPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotlyOutput("AnomaliaTemperaturaPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================
@@ -206,7 +206,7 @@ climaUI = div(
                 box(
                   width = 12,
                   height = "85vh",
-                  plotOutput("periodoChuvosoPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotlyOutput("periodoChuvosoPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================
@@ -223,7 +223,7 @@ climaUI = div(
                 ),
                 box(
                   width = 9,
-                  plotOutput("anomaliaPrecipitacaoPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotlyOutput("anomaliaPrecipitacaoPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================

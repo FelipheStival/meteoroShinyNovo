@@ -170,7 +170,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafico periodo chuvoso
-  output$periodoChuvosoPlot = renderPlot({
+  output$periodoChuvosoPlot = renderPlotly({
     
       graficos.periodoClimatico(
         dados = dadosClimaticos(),
@@ -181,7 +181,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafica anomalia temperatura
-  output$AnomaliaTemperaturaPlot = renderPlot({
+  output$AnomaliaTemperaturaPlot = renderPlotly({
     
       grafico.anomalia.temperatura(
         data_inv = dadosAnomaliaTemperatura(),
@@ -192,7 +192,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafica anomalia precipitacao
-  output$anomaliaPrecipitacaoPlot = renderPlot({
+  output$anomaliaPrecipitacaoPlot = renderPlotly({
     
       grafico.GraficoAnomalia(
         cidade = input$cidadeInput,

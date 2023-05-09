@@ -165,7 +165,7 @@ experimentosUI =  div(
         tabItem(tabName = "analise-hetmap",
                 box(
                   width = 12,
-                  plotOutput("grafico_analiseEstatistica_Heatmap", width = "100%", height = "85vh") %>% customSpinner()
+                  plotlyOutput("grafico_analiseEstatistica_Heatmap", width = "100%", height = "85vh") %>% customSpinner()
                 )  
         ),
         #========================================================
@@ -185,7 +185,7 @@ experimentosUI =  div(
                 ),
                 box(
                   width = 10,
-                  plotOutput("graficolinha", width = "100%", height = "80vh")  %>% customSpinner()
+                  plotlyOutput("graficolinha", width = "100%", height = "80vh")  %>% customSpinner()
                 )
         ),
         
@@ -244,18 +244,18 @@ experimentosUI =  div(
                       tabsetPanel(
                         tabPanel(
                           title = 'Media geral',
-                          plotOutput("grafico_analiseEstatistica_Resumo", width = "100%", height = "75vh") %>% customSpinner(),          
+                          plotlyOutput("grafico_analiseEstatistica_Resumo", width = "100%", height = "75vh") %>% customSpinner(),          
                         ),
                         tabPanel(
                           title = 'Gráfico cluster',
-                          plotOutput("grafico_geral_cluster", width = "100%", height = "75vh") %>%  customSpinner(), 
+                          plotlyOutput("grafico_geral_cluster", width = "100%", height = "75vh") %>%  customSpinner(), 
                         )
                       )
                     ),
                     
                     tabPanel(
                       title =  "Gráfico media local",
-                      plotOutput("grafico_analiseEstatistica_Unitario", width = "100%", height = "80vh") %>% customSpinner()
+                      plotlyOutput("grafico_analiseEstatistica_Unitario", width = "100%", height = "80vh") %>% customSpinner()
                     )
                   )
                 )
