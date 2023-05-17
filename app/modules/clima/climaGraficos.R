@@ -272,7 +272,8 @@ grafico.anomalia.temperatura = function(data_inv, municipio, meses, nomesMeses) 
     ) +
     theme_bw()
   
-  ggplotly(g1)
+  return(g1)
+  
 }
 
 #======================================================================
@@ -396,7 +397,8 @@ grafico.GraficoAnomalia = function(cidade,
     )
   g1 = g1 + labs(x = "", title = as.character(sprintf("Anomalia precipitacao em %s", cidade))) + theme(text = element_text(size = 16))
   
-  ggplotly(g1)
+  return(g1)
+  
 }
 
 #==================================================================
@@ -521,5 +523,5 @@ graficos.periodoClimatico = function(dados, Municipio, Coluna) {
       )
     )
   
-  ggplotly(g)
+  return(g)
 }

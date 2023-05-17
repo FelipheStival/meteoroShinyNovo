@@ -2,7 +2,7 @@
 # Metodo para obter os dados dos genotipos
 #================================================
 experimentos.provider.dados = function() {
-  
+
   statement = "SELECT ensaios.id,
      id_ensaio,
 	   estados.nome as estado,
@@ -13,6 +13,7 @@ experimentos.provider.dados = function() {
 	   safra,
 	   repeticao,
 	   produtividade as produtividade,
+	   grupo_maturacao,
 	   data_semeadura,
 	   data_emergencia,
 	   data_inicio_floracao,
@@ -40,18 +41,8 @@ experimentos.provider.dados = function() {
   dados[dados$fungicida == 't', 'fungicida'] = 'com'
   dados[dados$fungicida == 'f', 'fungicida'] = 'sem'
   
-  # Recriando ID ensaio para analises
-  dados$id_ensaio = paste(
-    dados$cidade,
-    dados$local,
-    dados$safra,
-    month(dados$data_semeadura),
-    dados$irrigacao,
-    dados$fungicida,
-    sep = '_'
-  )
-  
   return(dados)
+  
 }
 
 #================================================
@@ -79,6 +70,7 @@ experimentos.provider.dadosFiltrados = function(dados, input) {
   indexEpoca = which(input[['epocaInputDoencas']] == "Todos")
   indexSafra = which(input[['safraInputDoencas']] == "Todos")
   indexCategoria =  which(input[['categoriaInputDoencas']] == "Todos")
+  indexGrupoMaturacao = which(input[['grupoMaturacaoInputDoencas']] == "Todos")
   
   # Filtrando cultura
   if(length(indexCultura) == 0 & !is.null(input$culturaInputDoencas)){
@@ -96,8 +88,10 @@ experimentos.provider.dadosFiltrados = function(dados, input) {
   }
   
   # Filtrando tipo de grao
-  if(length(indexTipoGrao) == 0 & !is.null(input$tipodegraoInputDoencas)){
-    filtrado = filtrado[filtrado$tipo_de_grao %in% input$tipodegraoInputDoencas, ]
+  if(length(indexTipoGrao) == 0 & !is.null(input$tipodegraoInputDoencas) && !is.null(input$culturaInputDoencas)){
+    if(input$culturaInputDoencas == 'Feijão'){
+      filtrado = filtrado[filtrado$tipo_de_grao %in% input$tipodegraoInputDoencas, ]
+    }
   }
   
   # Filtrando safra
@@ -110,16 +104,25 @@ experimentos.provider.dadosFiltrados = function(dados, input) {
     filtrado = filtrado[filtrado$safra %in% input$safraInputDoencas, ]
   } 
   
-  # Filtrando irrigacao e fungicida
+  # Filtrando fungicida
   if(!is.null(input$fungicidaInputDoencas)){
     filtrado = filtrado[filtrado$fungicida == input$fungicidaInputDoencas, ]
   }
   
-  if(!is.null(input$irrigacao)){
-    filtrado = filtrado[filtrado$irrigacao == input$irrigacao, ]
+  # Filtrando irrigação
+  if(!is.null(input$irrigacaoInputDoencas)){
+    filtrado = filtrado[filtrado$irrigacao == input$irrigacaoInputDoencas, ]
+  }
+  
+  # Filtrando grupo de maturação
+  if(length(indexGrupoMaturacao) == 0 & !is.null(input$grupoMaturacaoInputDoencas) && !is.null(input$grupoMaturacaoInputDoencas)){
+    if(input$culturaInputDoencas == 'Soja'){
+      filtrado = filtrado[filtrado$grupo_maturacao %in% input$grupoMaturacaoInputDoencas, ]
+    }
   }
   
   return(filtrado)
+  
 }
 
 TE1 = function(df, y, rep, gen, trials, accuracy) {
@@ -208,39 +211,57 @@ TE1 = function(df, y, rep, gen, trials, accuracy) {
 
 service.getDiagostico = function(tabela, inputUsuario) {
   
-  # Obtendo dados necessarios para gerar modelo
-  dadosModelo = tabela[,c("id_ensaio", "genotipo", "repeticao", "safra", "cidade", "local", "irrigacao","fungicida","estado","tipo_de_grao", "produtividade", "cidade")]
-  dadosModelo = na.exclude(dadosModelo)
+  indicadores_bind = NULL
   
-  # Preparando dados
-  dadosModelo$repeticao = as.character(dadosModelo$repeticao)
-  dadosModelo$genotipo = as.factor(dadosModelo$genotipo)
-  dadosModelo$local = as.factor(dadosModelo$local)
-  
-  # Definindo o modelo de diagnostico dos experimentos
-  mdl_trials = lmer(produtividade ~ repeticao + (1|genotipo), data = dadosModelo, REML = TRUE)
-  
-  # Modelo linear (sem o efeito aleatório)
-  mdl_glm_trials = glm(produtividade ~ repeticao, data = dadosModelo, family = gaussian(link='identity'))
-  
-  # "genotipo" é a entrada da variável com efeito aleatório
-  # "repeticao" é a entrada como efeito fixo
-  tab_resultados = gera_tabela_por_trial(dadosModelo, mdl_trials, "repeticao", "genotipo")$tab
-  tab_resultados_glm = gera_tabela_por_trial_glm(dadosModelo, mdl_glm_trials, "repeticao")$tab
-  
-  # Obtemos assim os indicadores BLUE e BLUP
-  indicadores_bind = tibble(`Codigodo Experimento` = tab_resultados$id_ensaio,
-                             `Média BLUP (kg/ha)` = round(tab_resultados$MediaPonderada,0), 
-                             `Valor BIC (BLUP)` = round(tab_resultados$BIC,0),
-                             `Média BLUE(kg/ha)` = round(tab_resultados_glm$MediaPonderada,0), 
-                             `Valor BIC(BLUP)` = round(tab_resultados_glm$BIC,0),
-                             `MEDIA ARITMETICA(kg/ha)` = round(tab_resultados_glm$MediaPonderada,0),
-                             `Local` = tab_resultados$Local,
-                             `Cidade` = tab_resultados$Cidade,
-                             `UF` = tab_resultados$UF,
-                             `Irrigação` = ifelse(inputUsuario$irrigacaoInputDoencas == 't', 'Sim', 'Nao'),
-                             `Fungicida` = ifelse(inputUsuario$fungicidaInputDoencas == 't', 'Sim', 'Nao'),
-                             `Tipo de grão` = capture.output(cat(inputUsuario$tipodegraoInputDoencas, sep = ','))
+  tryCatch(
+    expr = {
+      
+      # Extraindo dados do filtrado
+      fungicidade = unique(tabela$fungicida)
+      irrigacao = unique(tabela$irrigacao)
+      
+      fungicidade = ifelse(fungicidade == 'com', 'Sim', 'Nao')
+      irrigacao = ifelse(irrigacao == 'sim', 'Sim', 'Nao')
+      
+      # Obtendo dados necessarios para gerar modelo
+      dadosModelo = tabela[,c("id_ensaio", "genotipo", "repeticao", "safra", "cidade", "local", "irrigacao","fungicida","estado","tipo_de_grao", "produtividade", "cidade")]
+      dadosModelo = na.exclude(dadosModelo)
+      
+      # Preparando dados
+      dadosModelo$repeticao = as.character(dadosModelo$repeticao)
+      dadosModelo$genotipo = as.factor(dadosModelo$genotipo)
+      dadosModelo$local = as.factor(dadosModelo$local)
+      
+      # Definindo o modelo de diagnostico dos experimentos
+      mdl_trials = lmer(produtividade ~ repeticao + (1|genotipo), data = dadosModelo, REML = TRUE)
+      
+      # Modelo linear (sem o efeito aleatório)
+      mdl_glm_trials = glm(produtividade ~ repeticao, data = dadosModelo, family = gaussian(link='identity'))
+      
+      # "genotipo" é a entrada da variável com efeito aleatório
+      tab_resultados = gera_tabela_por_trial(dadosModelo, mdl_trials, "repeticao", "genotipo")$tab
+      tab_resultados_glm = gera_tabela_por_trial_glm(dadosModelo, mdl_glm_trials, "repeticao")$tab
+      
+      # Obtemos assim os indicadores BLUE e BLUP
+      indicadores_bind = tibble(`Codigodo Experimento` = tab_resultados$id_ensaio,
+                                `Média BLUP (kg/ha)` = round(tab_resultados$MediaPonderada,0), 
+                                `Valor BIC (BLUP)` = round(tab_resultados$BIC,0),
+                                `Média BLUE(kg/ha)` = round(tab_resultados$MediaPonderada,0), 
+                                `Valor BIC(BLUP)` = round(tab_resultados$BIC,0),
+                                `MEDIA ARITMETICA(kg/ha)` = round(tab_resultados$MediaPonderada,0),
+                                `Local` = tab_resultados$Local,
+                                `Cidade` = tab_resultados$Cidade,
+                                `UF` = tab_resultados$UF,
+                                `Irrigação` = irrigacao,
+                                `Fungicida` = fungicidade,
+                                `Tipo de grão` = capture.output(cat(inputUsuario$tipodegraoInputDoencas, sep = ','))
+      )
+      
+    },
+    error = function(e){ 
+      indicadores_bind = NULL
+    }
+    
   )
   
   return(indicadores_bind)
@@ -837,6 +858,7 @@ ordena_cluster = function(tabela, coluna_cluster){
   cluster_data$classificacao = as.factor(cluster_data$classificacao)
   
   return(cluster_data)
+  
 }
 
 #==============================================#

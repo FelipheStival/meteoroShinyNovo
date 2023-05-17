@@ -10,8 +10,8 @@ gerador_graficos = function(banco, filtroSafra){
   
   informacao <- agrupados %>% dplyr::filter(safra == filtroSafra) %>% group_by(genotipo) %>%
     dplyr::summarize(Media_Fs = mean(Media_fs), Media_Fo = mean(Media_fo), predito_fs = 
-                predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
-                                                                                                    predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
+                       predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
+                                                                                                           predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
   
   grafico1 <- ggplot(informacao, aes(reorder(genotipo, -Media_Fo), Media_Fo, fill = predito_fo)) + 
     geom_col() +
@@ -33,9 +33,10 @@ gerador_graficos = function(banco, filtroSafra){
           legend.title = element_text(colour="red", size=10,  face="bold"),
           axis.text =  element_text(face="bold" ))
   
-  grafico = subplot(grafico2, grafico1)
+  grafico = plot_grid(grafico2, grafico1)
   
   return(grafico)
+  
 }
 
 # Grafico Geral
@@ -48,10 +49,10 @@ gerador_graficos_cidade = function(banco, local){
   ordem_fo = banco[[5]]
   ordem = banco[[6]]
   
-  informacao <- agrupados %>% dplyr::filter(cidade == local) %>% group_by(genotipo) %>%
+  informacao = agrupados %>% dplyr::filter(cidade == local) %>% group_by(genotipo) %>%
     dplyr::summarize(Media_Fs = mean(Media_fs), Media_Fo = mean(Media_fo), predito_fs = 
-                predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
-                                                                                                    predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
+                       predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
+                                                                                                           predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
   
   grafico1 <- ggplot(informacao, aes(reorder(genotipo, -Media_Fo), Media_Fo, fill = predito_fo)) + 
     geom_col() +
@@ -75,7 +76,8 @@ gerador_graficos_cidade = function(banco, local){
           legend.title = element_text(colour="red", size=10,  face="bold"),
           axis.text =  element_text(face="bold" ))
   
-  grafico = subplot(grafico2, grafico1)
- 
+  grafico = plot_grid(grafico2, grafico1)
+  
   return(grafico)
+  
 }

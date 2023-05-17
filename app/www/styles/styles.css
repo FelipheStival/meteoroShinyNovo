@@ -247,6 +247,18 @@
  border-top-color: #69BE41;
 }
 
+.nav>li>a {
+  color: #69BE41;
+}
+
+.box.box-solid.box-primary .box-header {
+  background-color: #69BE41;
+}
+
+.box.box-solid.box-primary {
+ border: 1px solid #69BE41;
+}
+
 /* Spinner css */
 
 @keyframes logo-animation {
@@ -263,4 +275,8 @@
   animation-name: logo-animation;
   animation-iteration-count: infinite;
   animation-direction: alternate
+}
+
+.nav-tabs-custom > .nav-tabs {
+  display: none;
 }

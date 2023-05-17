@@ -16,7 +16,8 @@ climaUI = div(
           icon = icon("arrow-circle-left"),
           style = "font-size: 1.3em; color: #161925"
         )
-      )
+      ),
+      titleWidth = 260
     ),
     
     #=======================================================
@@ -122,7 +123,7 @@ climaUI = div(
         tabItem(tabName = "tabelaTab",
                 box(
                   width = 12,
-                  dataTableOutput('tabelaDados', width = "100%", height = "90vh") %>% customSpinner(),
+                  dataTableOutput('tabelaDados') %>% customSpinner(),
                   downloadButton("downloadDados", "Download")
                 )
         ),
@@ -154,7 +155,7 @@ climaUI = div(
                 ),
                 box(
                   width = 9,
-                  plotlyOutput("AnomaliaTemperaturaPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotOutput("AnomaliaTemperaturaPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================
@@ -206,7 +207,7 @@ climaUI = div(
                 box(
                   width = 12,
                   height = "85vh",
-                  plotlyOutput("periodoChuvosoPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotOutput("periodoChuvosoPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================
@@ -223,7 +224,7 @@ climaUI = div(
                 ),
                 box(
                   width = 9,
-                  plotlyOutput("anomaliaPrecipitacaoPlot", width = "100%", height = "85vh") %>% customSpinner()
+                  plotOutput("anomaliaPrecipitacaoPlot", width = "100%", height = "85vh") %>% customSpinner()
                 )
         ),
         #=============================================

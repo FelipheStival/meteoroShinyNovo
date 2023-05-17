@@ -1,9 +1,6 @@
 # Mapa service
 mapaServer = function(input, output, session) {
   
-  # Javascript para alterar o title
-  runjs(sprintf('$("title").html("%s");', APP_NAME))
-  
   # Botao retornar
   observeEvent(input$btnRetonarClima,change_page('/'))
   
@@ -52,7 +49,7 @@ mapaServer = function(input, output, session) {
   # Saida tabela
   output$tabelaDados = renderDataTable({
     ClimaRenomearColunas(dadosClimaticos())
-  },options = list(lengthMenu = c(5, 10, 15, 20),pageLength = 15,scrollX = TRUE))
+  },options = list(lengthMenu = c(5, 10, 15, 20), pageLength = 10, scrollX = TRUE,  scrollY = TRUE))
   
   # Download dados
   output$downloadDados = downloadHandler(
@@ -170,7 +167,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafico periodo chuvoso
-  output$periodoChuvosoPlot = renderPlotly({
+  output$periodoChuvosoPlot = renderPlot({
     
       graficos.periodoClimatico(
         dados = dadosClimaticos(),
@@ -181,7 +178,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafica anomalia temperatura
-  output$AnomaliaTemperaturaPlot = renderPlotly({
+  output$AnomaliaTemperaturaPlot = renderPlot({
     
       grafico.anomalia.temperatura(
         data_inv = dadosAnomaliaTemperatura(),
@@ -192,7 +189,7 @@ mapaServer = function(input, output, session) {
   })
   
   # Saida grafica anomalia precipitacao
-  output$anomaliaPrecipitacaoPlot = renderPlotly({
+  output$anomaliaPrecipitacaoPlot = renderPlot({
     
       grafico.GraficoAnomalia(
         cidade = input$cidadeInput,

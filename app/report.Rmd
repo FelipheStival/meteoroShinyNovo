@@ -58,8 +58,7 @@ criarInfomacoes = function(){
       "Cidade",
       "irrigacao",
       "Fungicida",
-      "Tipo de grao",
-      "Epoca"
+      "Tipo de grao"
     ),
     Selecionados = c(
       input$culturaInputDoencas,
@@ -68,8 +67,7 @@ criarInfomacoes = function(){
       input$cidadeInputDoencas,
       input$irrigacaoInputDoencas,
       input$fungicidaInputDoencas,
-      input$tipodegraoInputDoencas,
-      input$epocaInputDoencas
+      input$tipodegraoInputDoencas
     ),
     stringsAsFactors = F
   )

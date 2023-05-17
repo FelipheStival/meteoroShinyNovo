@@ -46,6 +46,7 @@ app.LoadPackages = function()
     require(cowplot)
     require(shinybusy)
     require(flexclust)
+    require(plotly)
   
     #==============================================#
 }
@@ -76,7 +77,6 @@ app.globalFunctions = function(){
   
 }
 #==============================================#
-
 app.LoadPackages()
 app.globalFunctions()
 app.LoadModules()

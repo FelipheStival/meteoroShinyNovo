@@ -91,7 +91,9 @@ grafico.analiseEstatistica_Resumo = function(tabela, mediaSelect = 'TODOS') {
     labs(
       title = paste('Média geral', round(mediaPredict), sep = ":")
     )
-  ggplotly(g)
+  
+  return(ggplotly(g))
+  
 }
 #==============================================#
 
@@ -99,7 +101,9 @@ grafico.analiseEstatistica_Resumo = function(tabela, mediaSelect = 'TODOS') {
 # Aba "Estatistica"
 # Grafico "Unitario"
 grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TODOS') {
+  
   data_plot = data_plot[data_plot$site == site,]
+  
   g = ggplot(data = data_plot, aes(x=reorder(gid,predicts), y=predicts)) + 
     geom_boxplot( fill = "lightyellow") + 
     stat_boxplot(geom ='errorbar') + 
@@ -109,7 +113,8 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
     theme_light() +
     facet_grid(~site)
   
-  ggplotly(g)
+  return(g)
+  
 }
 #==============================================#
 
@@ -133,7 +138,7 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
       legend.title.align = 0.5
     )
   
-  ggplotly(grafico)
+  return(grafico)
 }
 #==============================================#
 
@@ -174,7 +179,8 @@ grafico.GraficoLinhas = function(dados) {
     theme_minimal()
   
   
-  ggplotly(p)
+  return(p)
+  
 }
 
 #==============================================#
@@ -242,12 +248,19 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
   
   # Intervalos em string para o grafico
   fill_label <- c()
-  fill_label[1] <- paste0("[",intervals[1,1],",",intervals[1,2],"]")
+  if(intervals[1,1] == intervals[1,2]){
+    fill_label[1] <- paste0(intervals[1,1])
+  } else {
+    fill_label[1] <- paste0("[",intervals[1,1],",",intervals[1,2],"]")
+  }
   
-  for(i in 2:length(unique(sim_data_pin$grupos))){
+  for(i in 2:length(unique(cluster_data_pin$grupos))){
     
-    fill_label[i] <- paste0("(",intervals[i,1],",",intervals[i,2],"]")
-    
+    if(intervals[i,1] == intervals[i,2]){
+      fill_label[i] <- paste0(intervals[i,1])
+    } else {
+      fill_label[i] <- paste0("[",intervals[i,1],",",intervals[i,2],"]")
+    }
   }
   
   # Filtrando de acordo com a media selecionada
@@ -274,6 +287,7 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
     theme_minimal()
   
   ggplotly(g)
+  
 }
 
 #==============================================#
@@ -327,6 +341,7 @@ grafico.analiseGGE_OrdemDeGenotipo = function(gge.model) {
                              max.overlaps  = 65.,
                              max.iter = 10000)
   return(plot)
+  
 }
 #==============================================#
 
@@ -381,7 +396,13 @@ grafico.pontecialProdutivo = function(dados, localInput) {
     filter(local == localInput) %>%
     top_n(n = 50, notas)
   
-  plot = ggplot(dados %>% filter(local == localInput), aes(x = genotipo, y = notas, fill = notas, label = round(notas,1))) +
+  sequence_length = length(unique(dados$genotipo))
+  first_sequence = c(1:(sequence_length%/%2))
+  second_sequence = c((sequence_length%/%2+1):sequence_length)
+  first_angles = c(90 - 180/length(first_sequence) * first_sequence)
+  second_angles = c(-90 - 180/length(second_sequence) * second_sequence)
+  
+  plot = dados %>% ggplot(aes(x = genotipo, y = notas, fill = notas, label = round(notas,1))) +
     geom_col(width = 0.85, colour = "black") +
     coord_polar() +
     scale_fill_gradientn(colors = c("red","yellow","green")) +
@@ -389,12 +410,14 @@ grafico.pontecialProdutivo = function(dados, localInput) {
     geom_text(position=position_stack(vjust=0.8), size = 2.8) +
     theme(axis.title=element_blank(),
           axis.text.y=element_blank(),
-          axis.text.x=element_text(face= "bold", size = 11),
+         # axis.text.x=element_text(face= "bold",
+                                   #size = 11,
+                                  # angle= c(first_angles,second_angles)),
           axis.ticks=element_blank(),
           panel.grid.major = element_line(size = 0.5, linetype = 'dashed',
-                                          colour = "darkgrey"),
+                                          colour = "darkgray"),
           panel.grid.minor = element_line(size = 0.25, linetype = 'dashed',
-                                          colour = "darkgrey")) +
+                                          colour = "darkgray")) +
     labs(fill = "PGP")
   
   return(plot)

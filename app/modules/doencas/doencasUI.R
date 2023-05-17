@@ -16,7 +16,8 @@ doencasUI = div(
           icon = icon("arrow-circle-left"),
           style = "font-size: 1.3em; color: #161925"
         )
-      )
+      ),
+      titleWidth = 260
     ),
     #=========================================================
     
@@ -46,6 +47,7 @@ doencasUI = div(
   #=========================================================
   
   dashboardBody(
+    useShinyjs(),
     tabItems(
       
       #============ Pagina de gráficos de doencas ==============
@@ -56,7 +58,7 @@ doencasUI = div(
                   width = 12,
                   selectInput(
                     inputId = "select_doencas_local",
-                    label = "selecione a cidade:",
+                    label = "Selecione a cidade:",
                     choices = c('Arapoti'),
                     selected = 'Arapoti'
                   ),
@@ -66,8 +68,11 @@ doencasUI = div(
                 width = 9,
                 tabBox(
                   width = '100%',
-                  tabPanel('Grafico Geral',plotlyOutput('graficoDoencasPlot2', width = '100%', height = '80vh') %>% customSpinner()),
-                  tabPanel('Grafico local',plotlyOutput('graficoDoencasPlot1', width = '100%', height = '80vh') %>% customSpinner())
+                  tabsetPanel(
+                    id = 'doencasTabGraficos',
+                    tabPanel('Gráfico geral',plotOutput('graficoDoencasPlot2', width = '100%', height = '80vh') %>% customSpinner()),
+                    tabPanel('Gráfico local',plotOutput('graficoDoencasPlot1', width = '100%', height = '80vh') %>% customSpinner())
+                  )
                 )     
               )
       

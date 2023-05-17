@@ -1,9 +1,6 @@
 # Doenca service
 experimentoServer = function(input, output, session) {
   
-  # Javascript para alterar o title
-  runjs(sprintf('$("title").html("%s");', APP_NAME))
-  
   # Botao retornar
   observeEvent(input$btnRetonarExperimentos,
                change_page('/')
@@ -47,16 +44,41 @@ experimentoServer = function(input, output, session) {
     return(y$pred)
   })
   
-  # Dados potencial pro
+  # Evento para desabilitar o input
+  observeEvent(input$tabGraficosExperimentos, {
+    
+    if(input$tabGraficosExperimentos == 'Gráfico media local'){
+      shinyjs::enable('select_analiseEstatistica_local')
+      shinyjs::disable('select_analiseEstatistica_media')
+    } else {
+      shinyjs::disable('select_analiseEstatistica_local')
+      shinyjs::enable('select_analiseEstatistica_media')
+    }
+    
+    # Atualiza o conteúdo da tab
+    updateTabsetPanel(session, "tabs", selected = input$tabGraficosExperimentos)
+    
+  })
   
+  # Evento de esconder campo tipo de grao de acordo com a cultura
   observe({
-    cultura = experimentos.provider.unique(dadosEnsaios(), 'cultura')
-    updateSelectInput(
-      session = session,
-      inputId = "categoriaInputDoencas",
-      choices = cultura,
-      selected = cultura[1]
-    )
+    
+    if(!is.null(input$culturaInputDoencas)){
+      
+      if(input$culturaInputDoencas == 'Feijão'){
+        
+        shinyjs::show('tipodegraoInputDoencas', TRUE)
+        shinyjs::hide('grupoMaturacaoInputDoencas', TRUE)
+        
+      } else {
+        
+        shinyjs::show('grupoMaturacaoInputDoencas', TRUE)
+        shinyjs::hide('tipodegraoInputDoencas', TRUE)
+        
+      }
+      
+    }
+    
   })
   
   # Atualizando input cultura
@@ -112,6 +134,21 @@ experimentoServer = function(input, output, session) {
       choices = c("Todos", tipoGraos),
       selected = "Todos"
     ) 
+  })
+  
+  # Atualizando input grupo de maturação
+  observe({
+    
+    grupoMaturacao = experimentos.provider.unique(dadosEnsaios(), 'grupo_maturacao')
+    grupoMaturacao = grupoMaturacao[!is.na(grupoMaturacao)]
+    
+    updateSelectInput(
+      session = session,
+      inputId = "grupoMaturacaoInputDoencas",
+      choices = c("Todos", grupoMaturacao),
+      selected = "Todos"
+    ) 
+    
   })
   
   # Atualizando input local analise estatistica
@@ -210,7 +247,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Unitario"
-  output$grafico_analiseEstatistica_Unitario = renderPlotly({
+  output$grafico_analiseEstatistica_Unitario = renderPlot({
     #====================================#
     # Validacao
     
@@ -229,7 +266,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Heatmap"
-  output$grafico_analiseEstatistica_Heatmap = renderPlotly({
+  output$grafico_analiseEstatistica_Heatmap = renderPlot({
     
     #====================================#
     # Validacao
@@ -268,7 +305,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "linhas"
-  output$graficolinha = renderPlotly({
+  output$graficolinha = renderPlot({
     
     #====================================#
     # Validacao

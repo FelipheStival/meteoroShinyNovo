@@ -16,7 +16,8 @@ experimentosUI =  div(
           icon = icon("arrow-circle-left"),
           style = "font-size: 1.3em; color: #161925"
         )
-      )
+      ),
+      titleWidth = 260
     ),
     
     #=======================================================
@@ -25,6 +26,7 @@ experimentosUI =  div(
     
     dashboardSidebar(
       includeCSS('www//styles//styles.css'),
+      useShinyjs(),
       sidebarMenu(
         menuItem(
           "Gráficos",
@@ -66,13 +68,13 @@ experimentosUI =  div(
           selectInput(
             inputId = "culturaInputDoencas",
             label = "Selecione a cultura:",
-            choices = "Todos"
+            choices = "Feijão"
           ),
           selectizeInput(
             inputId = "safraInputDoencas",
             label = "Selecione a safra:",
             choices = "15/16",
-            options = list(maxItems = 1)
+            options = list(maxItems = 2)
           ),
           selectInput(
             inputId = "estadoInputDoencas",
@@ -93,21 +95,28 @@ experimentosUI =  div(
             label = "irrigacao:",
             choices = c("Sim" = "sim",
                         "Nao" = "nao"),
-            selected = "Sim"
+            selected = "nao"
           ),
           selectInput(
             inputId = "fungicidaInputDoencas",
             label = "fungicida: ",
             choices = c("Sim" = "com",
                         "Nao" = "sem"),
-            selected = "Sim"
+            selected = "sem"
           ),
           selectInput(
             inputId = "tipodegraoInputDoencas",
             label = "Selecione o tipo de grao: ",
             choices = "Todos",
+            selected = "Todos",
             multiple = T,
-            selectize = T
+            selectize = T,
+          ),
+          selectInput(
+            inputId = "grupoMaturacaoInputDoencas",
+            label = "Selecione o grupo de maturação: ",
+            choices = "Todos",
+            selected = "Todos"
           )
         )
       )
@@ -127,35 +136,36 @@ experimentosUI =  div(
           tabBox(
             width = "100%",
             height = "90vh",
-            
-            tabPanel(
-              title = "Quem vence e aonde",
-              plotOutput("grafico_analiseGGE_QuemVenceEAonde",width = "100%",height = "85vh") %>% customSpinner()
-            ),
-            
-            tabPanel(
-              title = "Ordem de ambiente",
-              plotOutput("grafico_analiseGGE_OrdemDeAmbiente", width = "100%",height = "85vh") %>% customSpinner()
-            ),
-            
-            tabPanel(
-              title = "Ordem de genotipo",
-              plotOutput("grafico_analiseGGE_OrdemDeGenotipo",width = "100%",height = "85vh") %>% customSpinner()
-            ),
-            
-            tabPanel(
-              title = "Relacao entre ambientes",
-              plotOutput("grafico_analiseGGE_RelacaoEntreAmbientes",width = "100%",height = "85vh") %>% customSpinner()
-            ),
-            
-            tabPanel(
-              title = "Estabilidade / Media",
-              plotOutput("grafico_analiseGGE_EstabilidadeMedia", width = "100%", height = "85vh") %>% customSpinner()
-            ),
-            
-            tabPanel(
-              title = "Dendrograma",
-              plotOutput("grafico_analiseGGE_Denograma", width = "100%", height = "85vh") %>% customSpinner()
+            tabsetPanel(
+              tabPanel(
+                title = "Quem vence e aonde",
+                plotOutput("grafico_analiseGGE_QuemVenceEAonde",width = "100%",height = "85vh") %>% customSpinner()
+              ),
+              
+              tabPanel(
+                title = "Ordem de ambiente",
+                plotOutput("grafico_analiseGGE_OrdemDeAmbiente", width = "100%",height = "85vh") %>% customSpinner()
+              ),
+              
+              tabPanel(
+                title = "Ordem de genotipo",
+                plotOutput("grafico_analiseGGE_OrdemDeGenotipo",width = "100%",height = "85vh") %>% customSpinner()
+              ),
+              
+              tabPanel(
+                title = "Relacao entre ambientes",
+                plotOutput("grafico_analiseGGE_RelacaoEntreAmbientes",width = "100%",height = "85vh") %>% customSpinner()
+              ),
+              
+              tabPanel(
+                title = "Estabilidade / Media",
+                plotOutput("grafico_analiseGGE_EstabilidadeMedia", width = "100%", height = "85vh") %>% customSpinner()
+              ),
+              
+              tabPanel(
+                title = "Dendrograma",
+                plotOutput("grafico_analiseGGE_Denograma", width = "100%", height = "85vh") %>% customSpinner()
+              )
             )
           )
         ),
@@ -165,7 +175,7 @@ experimentosUI =  div(
         tabItem(tabName = "analise-hetmap",
                 box(
                   width = 12,
-                  plotlyOutput("grafico_analiseEstatistica_Heatmap", width = "100%", height = "85vh") %>% customSpinner()
+                  plotOutput("grafico_analiseEstatistica_Heatmap", width = "100%", height = "85vh") %>% customSpinner()
                 )  
         ),
         #========================================================
@@ -185,7 +195,7 @@ experimentosUI =  div(
                 ),
                 box(
                   width = 10,
-                  plotlyOutput("graficolinha", width = "100%", height = "80vh")  %>% customSpinner()
+                  plotOutput("graficolinha", width = "100%", height = "80vh")  %>% customSpinner()
                 )
         ),
         
@@ -238,24 +248,26 @@ experimentosUI =  div(
                   tabBox(
                     width = "100%",
                     height = "75vh",
-                    
-                    tabPanel(
-                      title = "Gráfico geral",
-                      tabsetPanel(
-                        tabPanel(
-                          title = 'Media geral',
-                          plotlyOutput("grafico_analiseEstatistica_Resumo", width = "100%", height = "75vh") %>% customSpinner(),          
-                        ),
-                        tabPanel(
-                          title = 'Gráfico cluster',
-                          plotlyOutput("grafico_geral_cluster", width = "100%", height = "75vh") %>%  customSpinner(), 
+                    tabsetPanel(
+                      id = 'tabGraficosExperimentos',
+                      tabPanel(
+                        title = "Gráfico geral",
+                        tabsetPanel(
+                          tabPanel(
+                            title = 'Media geral',
+                            plotlyOutput("grafico_analiseEstatistica_Resumo", width = "100%", height = "75vh") %>% customSpinner(),          
+                          ),
+                          tabPanel(
+                            title = 'Gráfico cluster',
+                            plotlyOutput("grafico_geral_cluster", width = "100%", height = "75vh") %>%  customSpinner(), 
+                          )
                         )
+                      ),
+                      
+                      tabPanel(
+                        title =  "Gráfico media local",
+                        plotOutput("grafico_analiseEstatistica_Unitario", width = "100%", height = "80vh") %>% customSpinner()
                       )
-                    ),
-                    
-                    tabPanel(
-                      title =  "Gráfico media local",
-                      plotlyOutput("grafico_analiseEstatistica_Unitario", width = "100%", height = "80vh") %>% customSpinner()
                     )
                   )
                 )

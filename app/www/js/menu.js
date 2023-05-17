@@ -28,3 +28,7 @@ menuItem.onclick = function(e){
   }
   console.log(opcao);
 }
+
+$(document).ready(function() {
+  document.title = 'Fundação ABC';
+});

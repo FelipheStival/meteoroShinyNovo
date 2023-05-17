@@ -1,19 +1,32 @@
 # Doenca service
 doencaServer = function(input, output, session) {
   
-  # Javascript para alterar o title
-  runjs(sprintf('$("title").html("%s");', APP_NAME))
-  
-  # Botao Voltar
-  observeEvent(input$btnRetonarDoencas,
-               change_page('/')
-  )
   
   # Reactive para conseguir os dados dos municipios
   dadosDoencas = reactive({
     
     dados = getDadosDoencasProvider()
     return(dados)
+    
+  })
+  
+  # Botao Voltar
+  observeEvent(input$btnRetonarDoencas,
+               change_page('/')
+  )
+  
+  # Evento para desabilitar o input
+  observeEvent(input$doencasTabGraficos, {
+    
+    # Observa qual a tab selecionada para desativar o input
+    if(input$doencasTabGraficos == 'Gráfico local'){
+      shinyjs::enable('select_doencas_local')
+    } else {
+      shinyjs::disable('select_doencas_local')
+    }
+    
+    # Atualiza o conteúdo da tab
+    updateTabsetPanel(session, "tabs", selected = input$doencasTabGraficos)
     
   })
   
@@ -55,16 +68,32 @@ doencaServer = function(input, output, session) {
   })
   
   # output grafico media geral
-  output$graficoDoencasPlot1 = renderPlotly({
+  output$graficoDoencasPlot1 = renderPlot({
     
+    #====================================#
+    # Validacao
+    
+    validate(
+      need(!is_null(dadosDoencas()),"Não há dados suficientes para exibicao do gráfico.")
+    )
+    
+    #====================================#
     localSelect = input$select_doencas_local
     gerador_graficos_cidade(dadosDoencas(), localSelect)
     
   })
   
   # output grafico local
-  output$graficoDoencasPlot2 = renderPlotly({
+  output$graficoDoencasPlot2 = renderPlot({
     
+    #====================================#
+    # Validacao
+    
+    validate(
+      need(!is_null(dadosDoencas()),"Não há dados suficientes para exibicao do gráfico.")
+    )
+    
+    #====================================#
     safraSelect = input$safraInputDoencas2;
     gerador_graficos(dadosDoencas(), safraSelect)
     

@@ -6,16 +6,17 @@ gerenciarUI = function(){
       dashboardPage(
         #========================header=========================
         
-        dashboardHeader(title =  "Gerenciar dados",
+        dashboardHeader(title = tags$img(src='logos//abc.png', width = 50),
                         tags$li(
                           class = "dropdown",
                           actionLink(
                             inputId = "btnRetonarGerenciar",
                             label = "Voltar",
-                            icon = icon("sign-out"),
-                            style = "font-size: 1.5em;"
+                            icon = icon("arrow-circle-left"),
+                            style = "font-size: 1.3em; color: #161925"
                           )
-                        )
+                        ),
+                        titleWidth = 260
                       ),
         
         #=======================================================

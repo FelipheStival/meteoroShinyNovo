@@ -9,9 +9,6 @@ server = shinyServer(function(input, output, session) {
   # Router
   router$server(input, output, session)
   
-  # Javascript para alterar o title
-  runjs(sprintf('$("title").html("%s");', APP_NAME))
-  
   # Doencas Server
   doencaServer(input, output, session)
   
