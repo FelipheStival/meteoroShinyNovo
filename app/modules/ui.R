@@ -4,6 +4,7 @@ router = make_router(
   route("clima", climaUI),
   route("experimentos", experimentosUI),
   route("doencas", doencasUI),
+  route("agricultor", agricultorUI),
   route("gerenciar", gerenciarUI())
 )
 

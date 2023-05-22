@@ -536,17 +536,34 @@ mean_fun = function(mdl, tabela, spec){
 # Prepara o banco de dados para ser plotado 
 #==============================================
 model.GGE = function(tabela) {
-  Y = model.Values(tabela)
-  gge.model = NULL
-  if(!is.null(Y)){
-    validate.model = gge(acast(Y, genotipo ~ id_gge, value.var = "emmean"))
-    validate.NA = colSums(is.na(validate.model$x))
-    validate.NA = length(validate.NA[validate.NA > 1])
-    if(validate.NA < 1){
-      gge.model = validate.model
+  
+  tryCatch(
+    expr = {
+      
+      Y = model.Values(tabela)
+      gge.model = NULL
+      
+      if(!is.null(Y)){
+        
+        validate.model = gge(acast(Y, genotipo ~ id_gge, value.var = "emmean"))
+        validate.NA = colSums(is.na(validate.model$x))
+        validate.NA = length(validate.NA[validate.NA > 1])
+        
+        if(validate.NA < 1){
+          gge.model = validate.model
+        }
+        
+      }
+      
+    },
+    error = function(e){ 
+      gge.model = NULL
     }
-  }
+    
+  )
+  
   return(gge.model)
+  
 }
 #==============================================#
 model.Values = function(tabela) {

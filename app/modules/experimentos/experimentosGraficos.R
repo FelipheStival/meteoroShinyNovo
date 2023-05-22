@@ -187,7 +187,7 @@ grafico.GraficoLinhas = function(dados) {
 # Aba "Estatistica"
 # Grafico "Linhas"
 #==============================================
-grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
+grafico.analiseCluster = function(data_plot){
   
   # Clusters
   cluster_data <- data_plot %>% 
@@ -265,11 +265,6 @@ grafico.analiseCluster = function(data_plot, mediaSelect = 'TODOS'){
   
   # Filtrando de acordo com a media selecionada
   mediaPredict <- mean(cluster_data_pin$mean_pred)
-  if(mediaSelect == 'ACIMA'){
-    cluster_data_pin =  cluster_data_pin[cluster_data_pin$mean_pred > mediaPredict,]
-  } else if(mediaSelect == "ABAIXO") {
-    cluster_data_pin =  cluster_data_pin[cluster_data_pin$mean_pred < mediaPredict,]
-  }
   
   # Enfim o grafico do cluster
   g = ggplot(cluster_data_pin, aes(x=grupos, y=reorder(gid,grupos), fill = as.factor(grupos))) +

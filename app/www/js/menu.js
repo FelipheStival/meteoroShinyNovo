@@ -18,7 +18,7 @@ menuItem.onclick = function(e){
     window.location.href = href + "experimentos"
     break;
   case 'Agricultor':
-    window.location.href = "/Agricultor/";
+    window.location.href = href + "agricultor"
     break;
   case 'Gerenciar':
     window.location.href = href + "gerenciar"

@@ -253,6 +253,7 @@ experimentosUI =  div(
                       tabPanel(
                         title = "Gráfico geral",
                         tabsetPanel(
+                          id = "subTabGraficosExperimentos",
                           tabPanel(
                             title = 'Media geral',
                             plotlyOutput("grafico_analiseEstatistica_Resumo", width = "100%", height = "75vh") %>% customSpinner(),          

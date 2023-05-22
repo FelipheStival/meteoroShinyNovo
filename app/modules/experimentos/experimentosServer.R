@@ -45,18 +45,29 @@ experimentoServer = function(input, output, session) {
   })
   
   # Evento para desabilitar o input
-  observeEvent(input$tabGraficosExperimentos, {
-    
-    if(input$tabGraficosExperimentos == 'Gráfico media local'){
-      shinyjs::enable('select_analiseEstatistica_local')
-      shinyjs::disable('select_analiseEstatistica_media')
-    } else {
-      shinyjs::disable('select_analiseEstatistica_local')
-      shinyjs::enable('select_analiseEstatistica_media')
+  observe({
+    if(!is.null(input$tabGraficosExperimentos) && !is.null(input$subTabGraficosExperimentos)){
+      
+      if(input$tabGraficosExperimentos == 'Gráfico media local'){
+        
+        shinyjs::enable('select_analiseEstatistica_local')
+        shinyjs::disable('select_analiseEstatistica_media')
+        
+      } else {
+        
+        shinyjs::disable('select_analiseEstatistica_local')
+        shinyjs::enable('select_analiseEstatistica_media')
+        
+        if(input$subTabGraficosExperimentos == 'Gráfico cluster'){
+          shinyjs::disable('select_analiseEstatistica_media')
+        }
+        
+      }
+      
+      # Atualiza o conteúdo da tab
+      updateTabsetPanel(session, "tabs", selected = input$tabGraficosExperimentos)
+      
     }
-    
-    # Atualiza o conteúdo da tab
-    updateTabsetPanel(session, "tabs", selected = input$tabGraficosExperimentos)
     
   })
   
@@ -297,8 +308,7 @@ experimentoServer = function(input, output, session) {
       need(length(unique(dadosFiltrados()$rep)) > 1, "Nao ha repetições suficientes para exibicao do grafico.")
     )
     #====================================#
-    mediaSelect = input$select_analiseEstatistica_media
-    grafico.analiseCluster(dadosExperimentos(), mediaSelect)
+    grafico.analiseCluster(dadosExperimentos())
     
   })
   
