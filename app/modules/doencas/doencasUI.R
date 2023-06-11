@@ -35,9 +35,15 @@ doencasUI = div(
         text = "Variaveis",
         icon = icon("hand-point-up"),
         selectizeInput(
+          inputId = "culturaInputDoencas2",
+          label = "Seleciona a cultura:",
+          choices = "Feijão",
+          options = list(maxItems = 1)
+        ),
+        selectizeInput(
           inputId = "safraInputDoencas2",
           label = "Selecione a safra:",
-          choices = "12/13",
+          choices = "15/16",
           options = list(maxItems = 1)
         )
      )

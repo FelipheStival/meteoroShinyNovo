@@ -242,18 +242,21 @@ service.getDiagostico = function(tabela, inputUsuario) {
       tab_resultados = gera_tabela_por_trial(dadosModelo, mdl_trials, "repeticao", "genotipo")$tab
       tab_resultados_glm = gera_tabela_por_trial_glm(dadosModelo, mdl_glm_trials, "repeticao")$tab
       
+      indexResultados = union(tab_resultados$id_ensaio, tab_resultados_glm$id_ensaio)
+      tab_resultados = tab_resultados[tab_resultados$id_ensaio %in% indexResultados,]
+      
       # Obtemos assim os indicadores BLUE e BLUP
       indicadores_bind = tibble(`Codigodo Experimento` = tab_resultados$id_ensaio,
                                 `Média BLUP (kg/ha)` = round(tab_resultados$MediaPonderada,0), 
                                 `Valor BIC (BLUP)` = round(tab_resultados$BIC,0),
-                                `Média BLUE(kg/ha)` = round(tab_resultados$MediaPonderada,0), 
-                                `Valor BIC(BLUP)` = round(tab_resultados$BIC,0),
-                                `MEDIA ARITMETICA(kg/ha)` = round(tab_resultados$MediaPonderada,0),
+                                `Média BLUE(kg/ha)` = round(tab_resultados_glm$MediaPonderada,0), 
+                                `Valor BIC(BLUP)` = round(tab_resultados_glm$BIC,0),
+                                `MEDIA ARITMETICA(kg/ha)` = round(tab_resultados_glm$MediaPonderada,0),
                                 `Local` = tab_resultados$Local,
                                 `Cidade` = tab_resultados$Cidade,
                                 `UF` = tab_resultados$UF,
-                                `Irrigação` = irrigacao,
-                                `Fungicida` = fungicidade,
+                                `Irrigação` = ifelse(inputUsuario$irrigacaoInputDoencas == 't', 'Sim', 'Nao'),
+                                `Fungicida` = ifelse(inputUsuario$fungicidaInputDoencas == 't', 'Sim', 'Nao'),
                                 `Tipo de grão` = capture.output(cat(inputUsuario$tipodegraoInputDoencas, sep = ','))
       )
       

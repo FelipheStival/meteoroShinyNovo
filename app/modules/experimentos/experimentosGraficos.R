@@ -121,6 +121,7 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
 #==============================================#
 # Aba "Estatistica"
 # Grafico "Heatmap"
+#==============================================#
 grafico.analiseEstatistica_Heatmap = function(tabela) {
   grafico = tabela %>%
     ggplot(aes(x = site, y = gid, fill = predicts)) +
@@ -145,6 +146,7 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
 #==============================================#
 # Aba "Estatistica"
 # Grafico "Linhas"
+#==============================================#
 grafico.GraficoLinhas = function(dados) {
   
   dados$gid = as.character(dados$gid)
@@ -391,12 +393,6 @@ grafico.pontecialProdutivo = function(dados, localInput) {
     filter(local == localInput) %>%
     top_n(n = 50, notas)
   
-  sequence_length = length(unique(dados$genotipo))
-  first_sequence = c(1:(sequence_length%/%2))
-  second_sequence = c((sequence_length%/%2+1):sequence_length)
-  first_angles = c(90 - 180/length(first_sequence) * first_sequence)
-  second_angles = c(-90 - 180/length(second_sequence) * second_sequence)
-  
   plot = dados %>% ggplot(aes(x = genotipo, y = notas, fill = notas, label = round(notas,1))) +
     geom_col(width = 0.85, colour = "black") +
     coord_polar() +
@@ -405,9 +401,6 @@ grafico.pontecialProdutivo = function(dados, localInput) {
     geom_text(position=position_stack(vjust=0.8), size = 2.8) +
     theme(axis.title=element_blank(),
           axis.text.y=element_blank(),
-         # axis.text.x=element_text(face= "bold",
-                                   #size = 11,
-                                  # angle= c(first_angles,second_angles)),
           axis.ticks=element_blank(),
           panel.grid.major = element_line(size = 0.5, linetype = 'dashed',
                                           colour = "darkgray"),

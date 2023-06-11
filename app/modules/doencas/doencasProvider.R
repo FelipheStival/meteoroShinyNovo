@@ -1,7 +1,7 @@
 #================================================
 # Metodo para obter os dados das doencas
 #================================================
-getDadosDoencasProvider = function(){
+getDadosDoencasProvider = function(input){
   
   tryCatch(
     expr = {
@@ -19,7 +19,8 @@ getDadosDoencasProvider = function(){
               gd.FS as valor_FS,
           	  gd.FO as valor_FO,
               en.SAFRA as safra,
-              en.ID_ENSAIO as id_ensaio
+              en.ID_ENSAIO as id_ensaio,
+			        cu.NOME as cultura
           from
           	ensaios_doencas gd
           	JOIN ENSAIOS en on en.ID = gd.ID_ENSAIO
@@ -27,20 +28,21 @@ getDadosDoencasProvider = function(){
           	JOIN locais lo on lo.ID = en.ID_LOCAL
           	JOIN cidades ci on ci.ID = lo.ID_CIDADE
           	JOIN estados es on es.ID = ci.ID_ESTADO
-          	JOIN tipos_de_graos ti on ti.ID = ge.ID_TIPO_GRAO';
+          	JOIN tipos_de_graos ti on ti.ID = ge.ID_TIPO_GRAO
+			      JOIN cultura cu on cu.id = gd.id_cultura';
       
       set.seed(12432)
       
       dados = banco.provider.executeQuery(sql, DOENCA_DB_DATABASE)
-      dados = dados[,c('local', 'cidade', 'estado', 'fungicida', 'irrigacao', 'genotipo', 'tipo_de_grao', 'repeticao', 'data_semeadura', 'valor_fs', 'valor_fo', 'safra', 'id_ensaio')]
-      names(dados) = c('local', 'cidade', 'estado', 'fungicida', 'irrigacao', 'genotipo', 'tipo_de_grao', 'repeticao', 'data_semeadura', 'FS', 'FO', 'safra', 'id_ensaio')
+      dados = dados[,c('local', 'cultura', 'cidade', 'estado', 'fungicida', 'irrigacao', 'genotipo', 'tipo_de_grao', 'repeticao', 'data_semeadura', 'valor_fs', 'valor_fo', 'safra', 'id_ensaio')]
+      names(dados) = c('local', 'cultura', 'cidade', 'estado', 'fungicida', 'irrigacao', 'genotipo', 'tipo_de_grao', 'repeticao', 'data_semeadura', 'FS', 'FO', 'safra', 'id_ensaio')
       
       wdata <- dados %>% filter(!is.na(FO), !is.na(FS), FO <= 10, FS <= 10) %>% mutate(FO = str_replace(FO, ",", "."),
                                                                                        FS = str_replace(FS, ",", ".")) %>% 
         mutate(FO = as.numeric(FO), FS = as.numeric(FS)) %>% 
         mutate(genotipo = as.factor(genotipo))
       
-      agrupados <- wdata %>% group_by(genotipo, cidade, safra) %>% dplyr::summarize(Media_fs = mean(FS),
+      agrupados <- wdata %>% group_by(genotipo, cidade, safra, cultura) %>% dplyr::summarize(Media_fs = mean(FS),
                                                                                     Media_fo = mean(FO),
                                                                                     quantidade = n())
       fo_modelo <- KMEANS(agrupados$Media_fo, k = 3)

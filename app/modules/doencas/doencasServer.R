@@ -5,7 +5,7 @@ doencaServer = function(input, output, session) {
   # Reactive para conseguir os dados dos municipios
   dadosDoencas = reactive({
     
-    dados = getDadosDoencasProvider()
+    dados = getDadosDoencasProvider(input)
     return(dados)
     
   })
@@ -67,6 +67,26 @@ doencaServer = function(input, output, session) {
     
   })
   
+  # Atualizando cultura
+  observe({
+    
+    if(!is.null(input$culturaInputDoencas)){
+      
+      dados = dadosDoencas()
+      dados = dados[[1]]
+      
+      if(nrow(dados) > 0){
+        updateSelectInput(
+          session = session,
+          inputId = "culturaInputDoencas2",
+          choices = unique(dados$cultura),
+          selected = unique(dados$cultura)[1]
+        ) 
+      }
+    }
+    
+  })
+  
   # output grafico media geral
   output$graficoDoencasPlot1 = renderPlot({
     
@@ -79,7 +99,9 @@ doencaServer = function(input, output, session) {
     
     #====================================#
     localSelect = input$select_doencas_local
-    gerador_graficos_cidade(dadosDoencas(), localSelect)
+    culturaSelect = input$culturaInputDoencas2
+    
+    gerador_graficos_cidade(dadosDoencas(), localSelect, culturaSelect)
     
   })
   
@@ -94,8 +116,10 @@ doencaServer = function(input, output, session) {
     )
     
     #====================================#
-    safraSelect = input$safraInputDoencas2;
-    gerador_graficos(dadosDoencas(), safraSelect)
+    safraSelect = input$safraInputDoencas2
+    culturaSelect = input$culturaInputDoencas2
+    
+    gerador_graficos(dadosDoencas(), safraSelect, culturaSelect)
     
   })
   

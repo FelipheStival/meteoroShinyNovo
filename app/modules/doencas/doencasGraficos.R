@@ -1,5 +1,5 @@
 # Grafico local
-gerador_graficos = function(banco, filtroSafra){
+gerador_graficos = function(banco, filtroSafra, filtroCultura){
   
   agrupados = banco[[1]]
   fs_modelo = banco[[2]]
@@ -8,7 +8,7 @@ gerador_graficos = function(banco, filtroSafra){
   ordem_fo = banco[[5]]
   ordem = banco[[6]]
   
-  informacao <- agrupados %>% dplyr::filter(safra == filtroSafra) %>% group_by(genotipo) %>%
+  informacao <- agrupados %>% dplyr::filter(safra == filtroSafra & cultura == filtroCultura) %>% group_by(genotipo) %>%
     dplyr::summarize(Media_Fs = mean(Media_fs), Media_Fo = mean(Media_fo), predito_fs = 
                        predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
                                                                                                            predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
@@ -40,7 +40,7 @@ gerador_graficos = function(banco, filtroSafra){
 }
 
 # Grafico Geral
-gerador_graficos_cidade = function(banco, local){
+gerador_graficos_cidade = function(banco, local, filtroCultura){
   
   agrupados = banco[[1]]
   fs_modelo = banco[[2]]
@@ -49,7 +49,7 @@ gerador_graficos_cidade = function(banco, local){
   ordem_fo = banco[[5]]
   ordem = banco[[6]]
   
-  informacao = agrupados %>% dplyr::filter(cidade == local) %>% group_by(genotipo) %>%
+  informacao = agrupados %>% dplyr::filter(cidade == local & cultura == filtroCultura) %>% group_by(genotipo) %>%
     dplyr::summarize(Media_Fs = mean(Media_fs), Media_Fo = mean(Media_fo), predito_fs = 
                        predict(fs_modelo, Media_Fs), predito_fo = predict(fo_modelo, Media_Fo)) %>% mutate(predito_fs = factor(predito_fs, levels = ordem_fs, label = ordem),
                                                                                                            predito_fo = factor(predito_fo, levels = ordem_fo, label = ordem))
