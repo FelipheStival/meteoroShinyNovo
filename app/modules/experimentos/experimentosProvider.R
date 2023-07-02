@@ -576,6 +576,7 @@ model.Values = function(tabela) {
       # modelo de efeito fixo
       fixed = dlply(tabela, .(id_ensaio), function(x)
         lm(produtividade ~ genotipo, x))
+      
       means = llply(fixed, function(x)
         mean_fun(x, tabela, spec = "genotipo"))
       

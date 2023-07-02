@@ -32,16 +32,17 @@ experimentosUI =  div(
           "Gráficos",
           tabName = "dados-perdidos",
           icon = icon("line-chart"),
-          menuSubItem(
-            "Dados Perdidos",
-            tabName = "dados-perdidos",
-            icon = icon("line-chart"),
-            selected = T
-          ),
+         #menuSubItem(
+            #"Dados Perdidos",
+            #tabName = "dados-perdidos",
+            #icon = icon("line-chart"),
+            #selected = T
+          #),
           menuSubItem(
             "Diagnostico",
             tabName = "diagnostico",
-            icon = icon("line-chart")
+            icon = icon("line-chart"),
+            selected = T
           ),
           menuItem(
             "Analise Estatistica",
@@ -133,38 +134,55 @@ experimentosUI =  div(
         #========= Página análise gge ==================
         tabItem(
           tabName = "analise-gge",
-          tabBox(
-            width = "100%",
-            height = "90vh",
-            tabsetPanel(
-              tabPanel(
-                title = "Quem vence e aonde",
-                plotOutput("grafico_analiseGGE_QuemVenceEAonde",width = "100%",height = "85vh") %>% customSpinner()
-              ),
-              
-              tabPanel(
-                title = "Ordem de ambiente",
-                plotOutput("grafico_analiseGGE_OrdemDeAmbiente", width = "100%",height = "85vh") %>% customSpinner()
-              ),
-              
-              tabPanel(
-                title = "Ordem de genotipo",
-                plotOutput("grafico_analiseGGE_OrdemDeGenotipo",width = "100%",height = "85vh") %>% customSpinner()
-              ),
-              
-              tabPanel(
-                title = "Relacao entre ambientes",
-                plotOutput("grafico_analiseGGE_RelacaoEntreAmbientes",width = "100%",height = "85vh") %>% customSpinner()
-              ),
-              
-              tabPanel(
-                title = "Estabilidade / Media",
-                plotOutput("grafico_analiseGGE_EstabilidadeMedia", width = "100%", height = "85vh") %>% customSpinner()
-              ),
-              
-              tabPanel(
-                title = "Dendrograma",
-                plotOutput("grafico_analiseGGE_Denograma", width = "100%", height = "85vh") %>% customSpinner()
+          column(
+            width = 2,
+            box(
+              status = 'warning',
+              width = '100%',
+              selectInput(
+                inputId = 'inputGenotiposGGE',
+                label = 'Escolha os genótipos',
+                choices = c('Todos'),
+                selected = 'Todos',
+                multiple = T
+              )
+            )
+          ),
+          column(
+            width = 10,
+            tabBox(
+              width = "100%",
+              height = "90vh",
+              tabsetPanel(
+                tabPanel(
+                  title = "Quem vence e aonde",
+                  plotOutput("grafico_analiseGGE_QuemVenceEAonde",width = "100%",height = "85vh") %>% customSpinner()
+                ),
+                
+                tabPanel(
+                  title = "Ordem de ambiente",
+                  plotOutput("grafico_analiseGGE_OrdemDeAmbiente", width = "100%",height = "85vh") %>% customSpinner()
+                ),
+                
+                tabPanel(
+                  title = "Ordem de genotipo",
+                  plotOutput("grafico_analiseGGE_OrdemDeGenotipo",width = "100%",height = "85vh") %>% customSpinner()
+                ),
+                
+                tabPanel(
+                  title = "Relacao entre ambientes",
+                  plotOutput("grafico_analiseGGE_RelacaoEntreAmbientes",width = "100%",height = "85vh") %>% customSpinner()
+                ),
+                
+                tabPanel(
+                  title = "Estabilidade / Media",
+                  plotOutput("grafico_analiseGGE_EstabilidadeMedia", width = "100%", height = "85vh") %>% customSpinner()
+                ),
+                
+                tabPanel(
+                  title = "Dendrograma",
+                  plotOutput("grafico_analiseGGE_Denograma", width = "100%", height = "85vh") %>% customSpinner()
+                )
               )
             )
           )
@@ -276,9 +294,9 @@ experimentosUI =  div(
         #========================================================
         
         #============== Página dados perdidos ===================
-        tabItem(tabName = "dados-perdidos",
-                plotOutput("grafico_dadosPerdidos_Estatistica", width = "100%", height = "90vh") %>% customSpinner()
-        ),
+        #tabItem(tabName = "dados-perdidos",
+                #plotOutput("grafico_dadosPerdidos_Estatistica", width = "100%", height = "90vh") %>% customSpinner()
+        #),
         #========================================================
         
         #=============== Página diagnostico =====================

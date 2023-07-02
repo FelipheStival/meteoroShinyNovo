@@ -44,6 +44,20 @@ experimentoServer = function(input, output, session) {
     return(y$pred)
   })
   
+  # Dados gráficos gge
+  dadosGGE = reactive({
+    
+    indexTodos = which(input$inputGenotiposGGE %in% 'Todos')
+    dadosFiltrados = dadosFiltrados()
+    
+    if(length(indexTodos) == 0 && length(input$inputGenotiposGGE) > 0){
+      dadosFiltrados = dadosFiltrados[dadosFiltrados$genotipo %in% input$inputGenotiposGGE, ]
+    }
+    
+    return(dadosFiltrados)
+    
+  })
+  
   # Evento para desabilitar o input
   observe({
     if(!is.null(input$tabGraficosExperimentos) && !is.null(input$subTabGraficosExperimentos)){
@@ -182,15 +196,25 @@ experimentoServer = function(input, output, session) {
     )
   })
   
-  # Atualizando lista genotipos grafico linhas
+  # Atualizando lista genotipos grafico linhas e GGE
   observe({
+    
     genotipos = experimentos.provider.unique(dadosFiltrados(), 'genotipo')
+    
     updateSelectInput(
       session = session,
       inputId = "GenotipoSelectDoencas",
       choices = genotipos,
       selected = genotipos[1]
     )
+    
+    updateSelectInput(
+      session = session,
+      inputId = 'inputGenotiposGGE',
+      choices = c('Todos', genotipos),
+      selected = 'Todos'
+    )
+    
   })
   
   output$tabela_diagnostico_Exibir = renderDataTable({
@@ -334,11 +358,11 @@ experimentoServer = function(input, output, session) {
   # Grafico "Quem vence e aonde"
   output$grafico_analiseGGE_QuemVenceEAonde = renderPlot({
     
-    gge = model.GGE(dadosFiltrados()) 
+    gge = model.GGE(dadosGGE()) 
     
     #====================================#
     # Validacao
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(gge),
@@ -354,12 +378,12 @@ experimentoServer = function(input, output, session) {
   # Grafico "Ordem de Ambiente"
   output$grafico_analiseGGE_OrdemDeAmbiente = renderPlot({
     
-    gge = model.GGE(dadosFiltrados())
+    gge = model.GGE(dadosGGE())
     
     #====================================#
     # Validacao
     
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(gge),
@@ -376,12 +400,12 @@ experimentoServer = function(input, output, session) {
   # Grafico "Ordem de genotipo"
   output$grafico_analiseGGE_OrdemDeGenotipo = renderPlot({
     
-    gge = model.GGE(dadosFiltrados())
+    gge = model.GGE(dadosGGE())
     
     #====================================#
     # Validacao
     
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(gge),
@@ -397,12 +421,12 @@ experimentoServer = function(input, output, session) {
   # Grafico "Relacao entre ambientes"
   output$grafico_analiseGGE_RelacaoEntreAmbientes = renderPlot({
     
-    gge = model.GGE(dadosFiltrados())
+    gge = model.GGE(dadosGGE())
     
     #====================================#
     # Validacao
     
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(gge),
@@ -418,12 +442,12 @@ experimentoServer = function(input, output, session) {
   # Grafico "Estabilidade / Media"
   output$grafico_analiseGGE_EstabilidadeMedia = renderPlot({
     
-    gge = model.GGE(dadosFiltrados())
+    gge = model.GGE(dadosGGE())
     
     #====================================#
     # Validacao
     
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(gge),
@@ -439,11 +463,11 @@ experimentoServer = function(input, output, session) {
   # Grafico "Denograma"
   output$grafico_analiseGGE_Denograma = renderPlot({
     
-    deno = model.deno(dadosFiltrados())
+    deno = model.deno(dadosGGE())
     
     #====================================#
     # Validacao
-    validate.ids_data = length(unique((dadosFiltrados()$id_ensaio)))
+    validate.ids_data = length(unique((dadosGGE()$id_ensaio)))
     
     validate(
       need(validate.ids_data > 1 & !is.null(deno),

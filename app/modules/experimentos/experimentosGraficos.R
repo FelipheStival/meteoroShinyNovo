@@ -123,6 +123,7 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
 # Grafico "Heatmap"
 #==============================================#
 grafico.analiseEstatistica_Heatmap = function(tabela) {
+  
   grafico = tabela %>%
     ggplot(aes(x = site, y = gid, fill = predicts)) +
     geom_tile(height = 1.1, color = 'black') +
@@ -140,6 +141,7 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
     )
   
   return(grafico)
+  
 }
 #==============================================#
 
