@@ -112,8 +112,8 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
     coord_flip() + 
     theme_light() +
     facet_grid(~site)
-  
-  return(g)
+  gly = ggplotly(g)
+  return(gly)
   
 }
 #==============================================#
@@ -123,8 +123,9 @@ grafico.analiseEstatistica_Unitario = function(data_plot, site = "", media = 'TO
 # Grafico "Heatmap"
 #==============================================#
 grafico.analiseEstatistica_Heatmap = function(tabela) {
-  
-  grafico = tabela %>%
+  tabela_media <- tabela %>% group_by(gid, site, year) %>%
+    summarise_at(vars("predicts"), mean)
+  grafico = tabela_media %>%
     ggplot(aes(x = site, y = gid, fill = predicts)) +
     geom_tile(height = 1.1, color = 'black') +
     scale_fill_gradientn(colors = c("red","green")) + 
@@ -140,8 +141,8 @@ grafico.analiseEstatistica_Heatmap = function(tabela) {
       legend.title.align = 0.5
     )
   
-  return(grafico)
-  
+  g2 <- ggplotly(grafico)
+  return(g2)
 }
 #==============================================#
 

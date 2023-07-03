@@ -282,7 +282,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Unitario"
-  output$grafico_analiseEstatistica_Unitario = renderPlot({
+  output$grafico_analiseEstatistica_Unitario = renderPlotly({
     #====================================#
     # Validacao
     
@@ -301,7 +301,7 @@ experimentoServer = function(input, output, session) {
   
   #==============================================#
   # Grafico "Heatmap"
-  output$grafico_analiseEstatistica_Heatmap = renderPlot({
+  output$grafico_analiseEstatistica_Heatmap = renderPlotly({
     
     #====================================#
     # Validacao
